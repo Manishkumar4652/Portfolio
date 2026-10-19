@@ -34,7 +34,7 @@ A modern, high-performance personal portfolio and full-stack CMS built with **Ne
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/manish2750/portfolio.git
+git clone https://github.com/Manishkumar4652/Portfolio.git
 cd portfolio
 ```
 
@@ -98,5 +98,5 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 **Manish Kumar**
 - **Portfolio**: [manishkumar.dev](https://manishkumar.dev)
-- **GitHub**: [@manish2750](https://github.com/manish2750)
+- **GitHub**: [@Manishkumar4652](https://github.com/Manishkumar4652)
 - **LinkedIn**: [linkedin.com/in/manishkumar](https://linkedin.com/in/manishkumar)
