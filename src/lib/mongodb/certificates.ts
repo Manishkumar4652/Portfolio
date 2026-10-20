@@ -24,24 +24,22 @@ async function getCollection(): Promise<Collection<CertificateDocument> | null> 
   return db.collection<CertificateDocument>(COLLECTION_NAME);
 }
 
+import { mapLocalToDisplay, getCertificateVisualUrl } from "./shared";
+export { mapLocalToDisplay, getCertificateVisualUrl };
+
 /**
  * Maps a MongoDB CertificateDocument to the clean unified display format.
  */
 export function mapDocumentToDisplay(doc: CertificateDocument): CertificateDisplay {
   const id = doc.id || doc._id?.toString() || "";
-  const isPdf = doc.resourceType === "raw" || doc.secureUrl?.toLowerCase().includes(".pdf");
+  const isPdf =
+    doc.resourceType === "raw" ||
+    Boolean(doc.secureUrl?.toLowerCase().includes(".pdf")) ||
+    Boolean(doc.secureUrl?.toLowerCase().includes(".ai"));
   const fileType = isPdf ? "pdf" : doc.secureUrl ? "image" : null;
 
-  // For Cloudinary-hosted PDFs uploaded with resource_type: "image",
-  // Cloudinary delivers the first page as a sharp, high-res PNG/JPG image seamlessly!
-  let previewImageUrl: string | null = null;
-  if (doc.secureUrl) {
-    if (isPdf && doc.secureUrl.includes("res.cloudinary.com")) {
-      previewImageUrl = doc.secureUrl.replace(/\.pdf$/i, ".png");
-    } else if (!isPdf) {
-      previewImageUrl = doc.secureUrl;
-    }
-  }
+  // Resolve visual preview URL (transforms Cloudinary PDFs, AI, PSD vector documents into crisp PNG images)
+  const visualUrl = getCertificateVisualUrl(doc.secureUrl);
 
   return {
     id,
@@ -53,8 +51,8 @@ export function mapDocumentToDisplay(doc: CertificateDocument): CertificateDispl
     description: doc.description || null,
     filePath: doc.secureUrl || null,
     fileType,
-    fileUrl: doc.secureUrl || null,
-    previewImageUrl,
+    fileUrl: visualUrl || doc.secureUrl || null,
+    previewImageUrl: visualUrl,
     featured: Boolean(doc.featured),
     sortOrder: doc.displayOrder || 0,
     displayOrder: doc.displayOrder || 0,
@@ -66,9 +64,6 @@ export function mapDocumentToDisplay(doc: CertificateDocument): CertificateDispl
     source: "mongodb",
   };
 }
-
-import { mapLocalToDisplay } from "./shared";
-export { mapLocalToDisplay };
 
 /**
  * Automatically seeds initial verified certificates if MongoDB collection is empty.

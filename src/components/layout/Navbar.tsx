@@ -23,15 +23,21 @@ export function Navbar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [mobileMenuOpen]);
 
-  // Prevent body scroll when mobile menu is open
+  // Ensure body scroll is unlocked and mobile menu closed on every route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    document.body.style.overflow = "";
+  }, [pathname]);
+
+  // Prevent body scroll only while mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
   }, [mobileMenuOpen]);
 

@@ -73,7 +73,7 @@ export function CertificatesView({ initialCertificates }: CertificatesViewProps)
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = originalOverflow;
+      document.body.style.overflow = originalOverflow === "hidden" ? "" : originalOverflow;
     };
   }, [modalState?.isOpen, closeModal]);
 
@@ -118,9 +118,8 @@ export function CertificatesView({ initialCertificates }: CertificatesViewProps)
 
   // Render individual card with top document preview
   const renderCertificateCard = (cert: CertificateDisplay, keyPrefix: string) => {
-    const visualSrc = cert.previewImageUrl || (cert.fileType !== "pdf" ? cert.fileUrl : null);
+    const visualSrc = cert.previewImageUrl || cert.fileUrl || null;
     const hasVisual = Boolean(visualSrc);
-    const isPdf = cert.fileType === "pdf";
 
     return (
       <div
@@ -150,6 +149,7 @@ export function CertificatesView({ initialCertificates }: CertificatesViewProps)
                 <img
                   src={visualSrc!}
                   alt={`Official Certificate for ${cert.title}`}
+                  loading="lazy"
                   className="w-full h-full object-contain transition-transform duration-300 group-hover/preview:scale-[1.02]"
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center">
@@ -159,23 +159,6 @@ export function CertificatesView({ initialCertificates }: CertificatesViewProps)
                   </span>
                 </div>
               </button>
-            ) : isPdf ? (
-              <a
-                href={cert.fileUrl!}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-red-400 hover:text-red-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 group/pdf"
-                aria-label={`Open official PDF document for ${cert.title} in new tab`}
-              >
-                <div className="w-12 h-12 rounded-xl bg-red-950/40 border border-red-600/30 flex items-center justify-center text-red-500 mb-2 shadow-[0_0_15px_rgba(229,9,20,0.25)] group-hover/pdf:scale-105 transition-transform">
-                  <FileText className="w-6 h-6" aria-hidden="true" />
-                </div>
-                <span className="text-xs font-semibold text-slate-200">Official PDF Document</span>
-                <span className="text-[10px] text-slate-500 mt-0.5 flex items-center gap-1">
-                  <span>Open Document</span>
-                  <ExternalLink className="w-3 h-3" />
-                </span>
-              </a>
             ) : (
               /* Non-deceptive, restrained fallback when no document is uploaded */
               <div className="flex flex-col items-center justify-center p-6 text-center">
@@ -241,49 +224,45 @@ export function CertificatesView({ initialCertificates }: CertificatesViewProps)
         {/* CARD FOOTER: Actions & Verification                     */}
         {/* ======================================================== */}
         <div className="px-6 py-3.5 border-t border-white/[0.08] flex items-center justify-between gap-2 text-xs bg-black/20">
-          {cert.verificationUrl ? (
-            <a
-              href={cert.verificationUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-red-400 hover:text-red-300 font-semibold p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 rounded min-h-[44px]"
-              aria-label={`Verify ${cert.title} accreditation (opens in new tab)`}
-            >
-              <span>Verify Credential</span>
-              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-            </a>
-          ) : hasVisual ? (
-            <button
-              type="button"
-              onClick={() =>
-                setModalState({
-                  isOpen: true,
-                  title: cert.title,
-                  imageSrc: visualSrc!,
-                  issuer: cert.issuer,
-                })
-              }
-              className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white font-medium p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 rounded min-h-[44px] cursor-pointer"
-            >
-              <Eye className="w-3.5 h-3.5 text-red-400" aria-hidden="true" />
-              <span>View Certificate</span>
-            </button>
-          ) : isPdf ? (
-            <a
-              href={cert.fileUrl!}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-slate-300 hover:text-white font-medium p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 rounded min-h-[44px]"
-            >
-              <FileText className="w-3.5 h-3.5 text-red-400" aria-hidden="true" />
-              <span>View Document</span>
-            </a>
-          ) : (
-            <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 py-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>Verified on Academic Record</span>
-            </span>
-          )}
+          <div className="flex items-center gap-3 flex-wrap">
+            {hasVisual && (
+              <button
+                type="button"
+                onClick={() =>
+                  setModalState({
+                    isOpen: true,
+                    title: cert.title,
+                    imageSrc: visualSrc!,
+                    issuer: cert.issuer,
+                  })
+                }
+                className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white font-medium p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 rounded min-h-[44px] cursor-pointer"
+              >
+                <Eye className="w-3.5 h-3.5 text-red-400" aria-hidden="true" />
+                <span>View Certificate</span>
+              </button>
+            )}
+
+            {cert.verificationUrl && (
+              <a
+                href={cert.verificationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-red-400 hover:text-red-300 font-semibold p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 rounded min-h-[44px]"
+                aria-label={`Verify ${cert.title} accreditation (opens in new tab)`}
+              >
+                <span>Verify Credential</span>
+                <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+              </a>
+            )}
+
+            {!hasVisual && !cert.verificationUrl && (
+              <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 py-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span>Verified on Academic Record</span>
+              </span>
+            )}
+          </div>
 
           {(cert.source === "mongodb" || cert.source === "supabase") && (
             <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">

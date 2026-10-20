@@ -78,8 +78,9 @@ export async function uploadCertificateAsset(file: File): Promise<UploadResult> 
   }
 
   const cld = getCloudinary();
-  const isPdf = file.type === "application/pdf";
-  const resourceTypeChoice: "auto" | "image" = isPdf ? "auto" : "image";
+  // Always upload under resource_type: "image" so Cloudinary generates visual page previews
+  // and rasterized web delivery for both PDFs and images without forcing downloads
+  const resourceTypeChoice: "image" = "image";
 
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
@@ -114,12 +115,17 @@ export async function uploadCertificateAsset(file: File): Promise<UploadResult> 
           );
         }
 
-        const normalizedResourceType: CertificateResourceType =
-          result.resource_type === "raw" ? "raw" : "image";
+        const normalizedResourceType: CertificateResourceType = "image";
+        let secureUrl = result.secure_url;
+        // If Cloudinary detected the format as .ai or vector, normalize to .png
+        // so web browsers can display and open the certificate directly without unknown file downloads
+        if (result.format === "ai" || secureUrl.toLowerCase().endsWith(".ai")) {
+          secureUrl = secureUrl.replace(/\.ai$/i, ".png");
+        }
 
         resolve({
           publicId: result.public_id,
-          secureUrl: result.secure_url,
+          secureUrl,
           resourceType: normalizedResourceType,
           format: result.format,
           bytes: result.bytes,

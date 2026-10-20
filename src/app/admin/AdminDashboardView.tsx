@@ -118,8 +118,8 @@ export function AdminDashboardView({
   const handleOpenEdit = (cert: CertificateDisplay) => {
     setEditingCert(cert);
     setSelectedFile(null);
-    setPreviewUrl(cert.fileUrl);
-    setPreviewType(cert.fileType);
+    setPreviewUrl(cert.previewImageUrl || cert.fileUrl);
+    setPreviewType(cert.previewImageUrl ? "image" : cert.fileType);
     setModalError(null);
     setIsModalOpen(true);
   };
@@ -408,18 +408,13 @@ export function AdminDashboardView({
                   <div className="flex items-start gap-4">
                     {/* Media Thumbnail or Placeholder */}
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-[#040405] border border-white/10 flex items-center justify-center shrink-0 overflow-hidden relative group">
-                      {cert.previewImageUrl || (cert.fileUrl && cert.fileType !== "pdf") ? (
+                      {cert.previewImageUrl || cert.fileUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={cert.previewImageUrl || cert.fileUrl!}
                           alt={cert.title}
                           className="w-full h-full object-cover"
                         />
-                      ) : cert.fileUrl && cert.fileType === "pdf" ? (
-                        <div className="flex flex-col items-center justify-center text-red-400">
-                          <FileText className="w-6 h-6" aria-hidden="true" />
-                          <span className="text-[9px] font-mono mt-1">PDF</span>
-                        </div>
                       ) : (
                         <div className="flex flex-col items-center justify-center text-amber-500/80 p-1 text-center">
                           <AlertTriangle className="w-5 h-5" aria-hidden="true" />
@@ -489,6 +484,7 @@ export function AdminDashboardView({
                         rel="noopener noreferrer"
                         className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 min-h-[44px] min-w-[44px] flex items-center justify-center"
                         aria-label={`View uploaded media for ${cert.title}`}
+                        title="View Certificate"
                       >
                         <Eye className="w-4 h-4" aria-hidden="true" />
                       </a>
