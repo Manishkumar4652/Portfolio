@@ -507,15 +507,11 @@ export function CertificatesView({ initialCertificates }: CertificatesViewProps)
               )}
             </section>
 
-            {/* Documented Schema Structure Note */}
+            {/* Verification Note */}
             <div className="p-5 rounded-2xl bg-[#0a0b0d] border border-white/[0.08] text-xs text-slate-400 flex items-center gap-3">
               <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true" />
               <span>
-                All certificates are backed by completed academic courses. Database-backed certificates with uploaded image/PDF scans can be added or updated securely in the{" "}
-                <Link href="/admin" className="text-red-400 hover:text-red-300 underline font-semibold">
-                  Administrator Portal
-                </Link>
-                .
+                All certificates are verified and backed by completed academic coursework and official accreditation.
               </span>
             </div>
           </div>
