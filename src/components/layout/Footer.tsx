@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { Container } from "../ui/Container";
-import { Mail, ArrowUpRight } from "lucide-react";
+import { Mail, ArrowUpRight, Phone } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "../ui/Icons";
 
 export function Footer() {
@@ -63,6 +63,16 @@ export function Footer() {
               Connect
             </h3>
             <ul className="space-y-1.5 text-xs sm:text-sm">
+              <li>
+                <a
+                  href={`tel:${siteConfig.links.phone || "+917014162252"}`}
+                  className="hover:text-red-400 transition-colors inline-flex items-center gap-2 focus-visible:outline-none focus-visible:text-red-400 py-0.5"
+                  aria-label="Call Manish Kumar"
+                >
+                  <Phone className="w-3.5 h-3.5 text-red-500" aria-hidden="true" />
+                  <span>+91 7014162252</span>
+                </a>
+              </li>
               <li>
                 <a
                   href={siteConfig.links.github}

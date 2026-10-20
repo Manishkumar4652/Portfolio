@@ -24,6 +24,8 @@ export interface SiteConfig {
     twitter?: string;
     leetcode?: string;
     email: string;
+    phone?: string;
+    phoneRaw?: string;
   };
   navigation: NavItem[];
   mediaSlots: {
@@ -53,6 +55,8 @@ export const siteConfig: SiteConfig = {
     linkedin: "https://www.linkedin.com/in/manish-prajapat-915870392",
     leetcode: "https://leetcode.com/u/Manish_kumar4774",
     email: "manish2750797@gmail.com",
+    phone: "+91 7014162252",
+    phoneRaw: "7014162252",
   },
   navigation: [
     { name: "Home", href: "/" },
