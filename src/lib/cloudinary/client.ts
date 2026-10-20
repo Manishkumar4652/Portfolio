@@ -324,3 +324,22 @@ export async function uploadResumeAsset(file: File): Promise<UploadResult> {
   });
 }
 
+/**
+ * Generates an authenticated, signed download URL for private or restricted assets (e.g. PDFs).
+ */
+export function getPrivateResumeDownloadUrl(
+  publicId: string,
+  format: string = "pdf",
+  resourceType: string = "image"
+): string | null {
+  try {
+    const cld = getCloudinary();
+    return cld.utils.private_download_url(publicId, format, {
+      resource_type: resourceType as "image" | "raw" | "video",
+      type: "upload",
+    });
+  } catch {
+    return null;
+  }
+}
+
