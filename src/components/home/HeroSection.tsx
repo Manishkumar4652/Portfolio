@@ -52,9 +52,9 @@ export function HeroSection({ initialHero, hasResume }: HeroSectionProps) {
                 Hi, I&apos;m <span className="text-white">Manish Kumar Prajapat</span>
               </span>
               <span className="block">
-                Aspiring{" "}
+                {heading}{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-600 to-rose-400">
-                  Full Stack Web Developer
+                  {highlightText}
                 </span>
               </span>
             </h1>

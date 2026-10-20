@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Section } from "@/components/ui/Section";
 import { Badge } from "@/components/ui/Badge";
 import { siteConfig } from "@/config/site";
-import { ArrowLeft, Briefcase, Calendar, CheckCircle2, GitBranch, MapPin } from "lucide-react";
+import { ArrowLeft, Briefcase, Calendar, CheckCircle2, MapPin } from "lucide-react";
 import Link from "next/link";
 import { connection } from "next/server";
 import { getPortfolioContent } from "@/lib/mongodb/content";

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { siteConfig } from "@/config/site";
-import { ArrowLeft, Mail, ArrowUpRight, MessageSquare, Sparkles } from "lucide-react";
+import { ArrowLeft, Mail, ArrowUpRight, Sparkles } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/Icons";
 import Link from "next/link";
 

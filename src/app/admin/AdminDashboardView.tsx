@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition, useMemo } from "react";
+import React, { useState, useTransition, useMemo, useSyncExternalStore } from "react";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -37,6 +37,8 @@ import {
   Eye,
 } from "lucide-react";
 
+const emptySubscribe = () => () => {};
+
 const CATEGORIES: CertificateCategory[] = [
   "Programming & Computer Science",
   "Data Structures & Algorithms",
@@ -64,10 +66,11 @@ export function AdminDashboardView({
   isConfigured,
   configStatus,
 }: AdminDashboardViewProps) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   const [activeTab, setActiveTab] = useState<
     "certificates" | "projects" | "content" | "resume"

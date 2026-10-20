@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import type { SkillItem } from "@/lib/mongodb/types";
-import { personalData, type SkillCategory } from "@/data/personal";
+import { personalData } from "@/data/personal";
 import { Section } from "@/components/ui/Section";
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -22,7 +22,6 @@ import {
   Cpu,
   Terminal,
   Database,
-  Globe,
   Grid3X3,
   ListFilter,
   Flame,
@@ -122,9 +121,6 @@ export function SkillsView({ initialSkills }: SkillsViewProps) {
     const set = new Set(skills.map((s) => s.category || "General"));
     return ["All", ...Array.from(set)];
   }, [skills]);
-
-  // Proficiency values
-  const proficiencies = ["All", "Advanced", "Proficient", "Familiar"];
 
   // Filtered skills
   const filteredSkills = useMemo(() => {

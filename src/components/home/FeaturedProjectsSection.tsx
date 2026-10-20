@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Link from "next/link";
 import type { ProjectDisplay } from "@/lib/mongodb/types";
 import { mapLocalProjectsToDisplay } from "@/lib/mongodb/shared";
 import { Section } from "@/components/ui/Section";

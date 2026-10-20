@@ -1,12 +1,24 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 export function IntroSplash() {
   const [isVisible, setIsVisible] = useState(true);
   const [isFading, setIsFading] = useState(false);
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
+
+  const endIntro = useCallback(() => {
+    setIsFading((fading) => {
+      if (fading) return fading;
+      document.body.style.overflow = "unset";
+      // 700ms smooth cinematic dissolve before removing from DOM
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 700);
+      return true;
+    });
+  }, []);
 
   useEffect(() => {
     // Lock body scroll during intro animation so page cannot be scrolled behind video
@@ -33,18 +45,7 @@ export function IntroSplash() {
       clearTimeout(timer);
       document.body.style.overflow = originalOverflow;
     };
-  }, []);
-
-  const endIntro = () => {
-    if (isFading) return;
-    setIsFading(true);
-    document.body.style.overflow = "unset";
-
-    // 700ms smooth cinematic dissolve before removing from DOM
-    setTimeout(() => {
-      setIsVisible(false);
-    }, 700);
-  };
+  }, [endIntro]);
 
   if (!isVisible) return null;
 
